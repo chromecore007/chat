@@ -30,7 +30,7 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
   cors: {
-    origin: "https://chat-black-gamma-80.vercel.app/",
+    origin: "https://chat-black-gamma-80.vercel.app",
     methods: ["GET", "POST"],
   },
 });
