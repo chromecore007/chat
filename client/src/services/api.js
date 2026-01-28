@@ -1,10 +1,9 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://chat-01rn.onrender.com/api",
 });
 
-// 🔥 YAHI PAR LAGANA HAI
 API.interceptors.request.use((config) => {
   const token = sessionStorage.getItem("token");
   if (token) {
