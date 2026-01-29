@@ -450,6 +450,18 @@ const getInlinePdfUrl = (url) => {
   return url;
 };
 
+const getPdfPreviewUrl = (url) => {
+  if (!url) return url;
+
+  // raw → image preview (first page)
+  if (url.includes("/raw/upload/") && url.endsWith(".pdf")) {
+    return url.replace("/raw/upload/", "/image/upload/pg_1/");
+  }
+
+  return url;
+};
+
+
 
 
 
@@ -705,19 +717,20 @@ const getInlinePdfUrl = (url) => {
 )}
 
 {/* 📄 PDF / DOC / OTHER */}
+{/* 📄 PDF PREVIEW */}
 {m.file &&
-  m.fileType !== "image" &&
-  m.fileType !== "video" &&
-  m.fileType !== "audio" && (
+  m.fileType === "raw" &&
+  m.file.endsWith(".pdf") && (
     <a
-      href={getInlinePdfUrl(m.file)}
+      href={getPdfPreviewUrl(m.file)}
       target="_blank"
       rel="noreferrer"
       className="chat-doc"
     >
-      📄 Open PDF
+      📄 Preview PDF
     </a>
   )}
+
 
 
 
