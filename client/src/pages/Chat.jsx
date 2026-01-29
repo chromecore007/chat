@@ -440,6 +440,17 @@ const stopRecording = () => {
   }
 };
 
+const getInlinePdfUrl = (url) => {
+  if (!url) return url;
+
+  if (url.endsWith(".pdf")) {
+    return `${url}?response-content-disposition=inline`;
+  }
+
+  return url;
+};
+
+
 
 
 
@@ -698,16 +709,16 @@ const stopRecording = () => {
   m.fileType !== "image" &&
   m.fileType !== "video" &&
   m.fileType !== "audio" && (
-   <a
-  href={m.file.replace("/upload/", "/upload/fl_inline/")}
-  target="_blank"
-  rel="noreferrer"
-  className="chat-doc"
->
-  📄 Open PDF
-</a>
+    <a
+      href={getInlinePdfUrl(m.file)}
+      target="_blank"
+      rel="noreferrer"
+      className="chat-doc"
+    >
+      📄 Open PDF
+    </a>
+  )}
 
-)}
 
 
       {/* SEEN STATUS */}
