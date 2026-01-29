@@ -713,7 +713,7 @@ const getInlinePdfUrl = (url) => {
   m.fileType === "raw" &&
   m.file.endsWith(".pdf") && (
     <a
-      href={`${m.file}?response-content-disposition=inline`}
+      href={m.file.replace("/raw/upload/", "/raw/upload/fl_inline/")}
       target="_blank"
       rel="noreferrer"
       className="chat-doc"
@@ -721,6 +721,7 @@ const getInlinePdfUrl = (url) => {
       📄 Open PDF
     </a>
   )}
+
 
 
 
