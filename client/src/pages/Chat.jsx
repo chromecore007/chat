@@ -687,39 +687,33 @@ const getInlinePdfUrl = (url) => {
 
 {/* IMAGE */}
 {m.file && m.fileType === "image" && (
-  <img
-    src={m.file}
-    alt="img"
-    className="chat-image"
-    onClick={() => setViewImage(m.file)}
-  />
+  <img src={m.file} className="chat-image" />
 )}
 
 {/* VIDEO */}
 {m.file && m.fileType === "video" && (
-  <video controls className="chat-video">
+  <video controls>
     <source src={m.file} />
   </video>
 )}
 
-{/* 🎤 AUDIO */}
+{/* AUDIO */}
 {m.file && m.fileType === "audio" && (
   <CustomAudio src={m.file} />
 )}
 
-{/* 📄 PDF FILE */}
-{m.file &&
-  m.fileType === "raw" &&
-  m.file.endsWith(".pdf") && (
-    <a
-      href={`https://chat-01rn.onrender.com/api/pdf?url=${encodeURIComponent(m.file)}`}
-      target="_blank"
-      rel="noreferrer"
-      className="chat-doc"
-    >
-      📄 Open PDF
-    </a>
-  )}
+{/* PDF / DOC / ZIP */}
+{m.file && m.fileType === "raw" && (
+  <a
+    href={m.file}
+    target="_blank"
+    rel="noreferrer"
+    className="chat-doc"
+  >
+    📄 Open PDF
+  </a>
+)}
+
 
 
 

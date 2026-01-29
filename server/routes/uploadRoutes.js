@@ -1,40 +1,34 @@
 const express = require("express");
 const multer = require("multer");
-const router = express.Router();
 const cloudinary = require("../config/cloudinary");
 
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 router.post("/", upload.single("file"), async (req, res) => {
   try {
     if (!req.file) {
-      return res.status(400).json({ message: "No file received" });
+      return res.status(400).json({ message: "No file" });
     }
-
-    const isPdf = req.file.mimetype === "application/pdf";
 
     cloudinary.uploader.upload_stream(
       {
-        resource_type: isPdf ? "raw" : "auto",
-        format: isPdf ? "pdf" : undefined,
-        content_type: req.file.mimetype, // 🔥 MOST IMPORTANT LINE
+        resource_type: "auto", // IMAGE, VIDEO, PDF sab
       },
       (error, result) => {
         if (error) {
-          console.error("Cloudinary error 👉", error);
-          return res.status(500).json({ message: "Upload failed" });
+          console.error(error);
+          return res.status(500).json({ message: "Cloudinary error" });
         }
 
         res.json({
           url: result.secure_url,
-          fileType: result.resource_type,
+          fileType: result.resource_type, // image / video / raw
         });
       }
     ).end(req.file.buffer);
 
   } catch (err) {
-    console.error("Upload route error 👉", err);
     res.status(500).json({ message: "Server error" });
   }
 });
