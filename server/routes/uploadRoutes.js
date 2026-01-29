@@ -1,31 +1,40 @@
 const express = require("express");
 const multer = require("multer");
 const router = express.Router();
+const cloudinary = require("../config/cloudinary");
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
+// Multer memory storage
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-const upload = multer({
-  storage,
-});
+router.post("/", upload.single("file"), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: "No file received" });
+    }
 
-router.post("/", upload.single("file"), (req, res) => {
-  console.log("📦 FILE RECEIVED:", req.file); // 🔥 DEBUG
+    const uploadStream = cloudinary.uploader.upload_stream(
+      {
+        resource_type: "auto", // image, video, audio, pdf sab
+      },
+      (error, result) => {
+        if (error) {
+          console.error("❌ Cloudinary error:", error);
+          return res.status(500).json({ message: "Upload failed" });
+        }
 
-  if (!req.file) {
-    return res.status(400).json({ message: "No file received" });
+        res.json({
+          url: result.secure_url,
+          fileType: result.resource_type,
+        });
+      }
+    );
+
+    uploadStream.end(req.file.buffer);
+  } catch (err) {
+    console.error("❌ Upload route error:", err);
+    res.status(500).json({ message: "Server error" });
   }
-
-  res.json({
-    url: `http://localhost:5000/uploads/${req.file.filename}`,
-    fileType: req.file.mimetype,
-  });
 });
 
 module.exports = router;
