@@ -450,16 +450,7 @@ const getInlinePdfUrl = (url) => {
   return url;
 };
 
-const getPdfPreviewUrl = (url) => {
-  if (!url) return url;
 
-  // raw → image preview (first page)
-  if (url.includes("/raw/upload/") && url.endsWith(".pdf")) {
-    return url.replace("/raw/upload/", "/image/upload/pg_1/");
-  }
-
-  return url;
-};
 
 
 
@@ -717,19 +708,20 @@ const getPdfPreviewUrl = (url) => {
 )}
 
 {/* 📄 PDF / DOC / OTHER */}
-{/* 📄 PDF PREVIEW */}
+{/* 📄 PDF FILE */}
 {m.file &&
   m.fileType === "raw" &&
   m.file.endsWith(".pdf") && (
     <a
-      href={getPdfPreviewUrl(m.file)}
+      href={`${m.file}?response-content-disposition=inline`}
       target="_blank"
       rel="noreferrer"
       className="chat-doc"
     >
-      📄 Preview PDF
+      📄 Open PDF
     </a>
   )}
+
 
 
 
