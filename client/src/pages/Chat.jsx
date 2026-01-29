@@ -707,13 +707,12 @@ const getInlinePdfUrl = (url) => {
   <CustomAudio src={m.file} />
 )}
 
-{/* 📄 PDF / DOC / OTHER */}
 {/* 📄 PDF FILE */}
 {m.file &&
   m.fileType === "raw" &&
   m.file.endsWith(".pdf") && (
     <a
-      href={m.file.replace("/raw/upload/", "/raw/upload/fl_inline/")}
+      href={`https://chat-01rn.onrender.com/api/pdf?url=${encodeURIComponent(m.file)}`}
       target="_blank"
       rel="noreferrer"
       className="chat-doc"
@@ -721,6 +720,7 @@ const getInlinePdfUrl = (url) => {
       📄 Open PDF
     </a>
   )}
+
 
 
 
