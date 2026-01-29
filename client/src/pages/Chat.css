@@ -1151,7 +1151,7 @@
 
 
 .bubble.me .chat-image {
-  max-width: 170px !important;
+  max-width: 150px !important;
 }
 
 .bubble:not(.me) .chat-image {
