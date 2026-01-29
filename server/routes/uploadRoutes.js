@@ -17,7 +17,8 @@ router.post("/", upload.single("file"), async (req, res) => {
     cloudinary.uploader.upload_stream(
       {
         resource_type: isPdf ? "raw" : "auto",
-        format: isPdf ? "pdf" : undefined, // 🔥 THIS IS THE KEY FIX
+        format: isPdf ? "pdf" : undefined,
+        content_type: req.file.mimetype, // 🔥 MOST IMPORTANT LINE
       },
       (error, result) => {
         if (error) {
@@ -26,7 +27,7 @@ router.post("/", upload.single("file"), async (req, res) => {
         }
 
         res.json({
-          url: result.secure_url,     // 🔥 ab .pdf ke sath aayega
+          url: result.secure_url,
           fileType: result.resource_type,
         });
       }
