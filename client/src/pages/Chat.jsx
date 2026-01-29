@@ -668,38 +668,35 @@ const stopRecording = () => {
         m.sender === currentUser._id ? "me" : ""
       }`}
     >
-      {/* TEXT */}
-      {m.text && <span>{m.text}</span>}
+     {/* TEXT */}
+{m.text && <span>{m.text}</span>}
 
-      {/* IMAGE */}
-      {m.file && m.fileType?.startsWith("image") && (
-        <img
-          src={m.file}
-          alt="img"
-          className="chat-image"
-           onClick={() => setViewImage(m.file)}
-        />
-      )}
+{/* IMAGE */}
+{m.file && m.fileType === "image" && (
+  <img
+    src={m.file}
+    alt="img"
+    className="chat-image"
+    onClick={() => setViewImage(m.file)}
+  />
+)}
 
-      {/* VIDEO */}
-      {m.file && m.fileType?.startsWith("video") && (
-        <video controls className="chat-video">
-          <source src={m.file} />
-        </video>
-      )}
+{/* VIDEO */}
+{m.file && m.fileType === "video" && (
+  <video controls className="chat-video">
+    <source src={m.file} />
+  </video>
+)}
 
-      
-{/* 🎤 AUDIO MESSAGE */}
+{/* 🎤 AUDIO */}
 {m.file && m.fileType === "audio" && (
   <CustomAudio src={m.file} />
 )}
 
-
-
-
-    {m.file &&
-  !m.fileType?.startsWith("image") &&
-  !m.fileType?.startsWith("video") &&
+{/* 📄 PDF / DOC / OTHER */}
+{m.file &&
+  m.fileType !== "image" &&
+  m.fileType !== "video" &&
   m.fileType !== "audio" && (
     <a
       href={m.file}
@@ -709,7 +706,7 @@ const stopRecording = () => {
     >
       📄 Download file
     </a>
-  )}
+)}
 
 
       {/* SEEN STATUS */}
