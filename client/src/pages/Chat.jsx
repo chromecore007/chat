@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { uploadPdfToSupabase } from "../services/pdfUpload";
 import API from "../services/api"; 
 import axios from "axios";
 import io from "socket.io-client";
@@ -351,29 +352,31 @@ const downloadImage = async (url) => {
 
 
 
-const handleFile = (e) => {
-  const files = Array.from(e.target.files);
-  if (!files.length) return;
+const handleFile = async (e) => {
+  const file = e.target.files[0];
+  if (!file || !selectedUser) return;
 
-  const images = files.filter((f) =>
-    f.type.startsWith("image")
-  );
+  // 📄 PDF → SUPABASE
+  if (file.type === "application/pdf") {
+    try {
+      const pdfUrl = await uploadPdfToSupabase(file);
 
-  const others = files.filter(
-    (f) => !f.type.startsWith("image")
-  );
+      socket.emit("privateMessage", {
+        sender: currentUser._id,
+        receiver: selectedUser._id,
+        file: pdfUrl,
+        fileType: "pdf",
+      });
+    } catch (err) {
+      alert("PDF upload failed");
+    }
+    return;
+  }
 
-  // image preview
-  const previews = images.map((file) => ({
-    file,
-    url: URL.createObjectURL(file),
-  }));
-
-  setPreviewFiles((prev) => [...prev, ...previews]);
-
-  // non-image → direct send
-  others.forEach((file) => sendFileToServer(file));
+  // 🖼️ 🎥 🎵 → CLOUDINARY (existing)
+  sendFileToServer(file);
 };
+
 
 
 
@@ -708,18 +711,17 @@ const getInlinePdfUrl = (url) => {
 )}
 
 {/* 📄 PDF FILE */}
-{m.file &&
-  m.fileType === "raw" &&
-  m.file.endsWith(".pdf") && (
-    <a
-      href={`https://chat-01rn.onrender.com/api/pdf?url=${encodeURIComponent(m.file)}`}
-      target="_blank"
-      rel="noreferrer"
-      className="chat-doc"
-    >
-      📄 Open PDF
-    </a>
-  )}
+{m.fileType === "pdf" && (
+  <a
+    href={m.file}
+    target="_blank"
+    rel="noreferrer"
+    className="chat-doc"
+  >
+    📄 Open PDF
+  </a>
+)}
+
 
 
 
