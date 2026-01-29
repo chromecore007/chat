@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import API from "../services/api"; 
 import axios from "axios";
 import io from "socket.io-client";
 import "./Chat.css";
@@ -307,22 +308,24 @@ const sendMessage = () => {
 };
 
 const sendAudioToServer = async (blob) => {
-  const formData = new FormData();
-  formData.append("file", blob, "voice-message.webm");
+  try {
+    const formData = new FormData();
+    formData.append("file", blob, "audio.webm");
 
-  const res = await axios.post(
-    "https://chat-01rn.onrender.com/api/upload",
-    formData,
-    authHeader
-  );
+    const res = await API.post("/upload", formData);
 
-  socket.emit("privateMessage", {
-    sender: currentUser._id,
-    receiver: selectedUser._id,
-    file: res.data.url,
-    fileType: "audio",
-  });
+    socket.emit("privateMessage", {
+      sender: currentUser._id,
+      receiver: selectedUser._id,
+      text: "",
+      file: res.data.url,       // 🔥 CLOUDINARY
+      fileType: res.data.fileType,
+    });
+  } catch (err) {
+    console.log("Audio upload error", err);
+  }
 };
+
 
 
 const downloadImage = async (url) => {
@@ -375,30 +378,21 @@ const handleFile = (e) => {
 
 
 const sendFileToServer = async (file) => {
-  if (!selectedUser) return;
-
   try {
     const formData = new FormData();
     formData.append("file", file);
 
-    const res = await axios.post(
-      "https://chat-01rn.onrender.com/api/upload",
-      formData,
-      authHeader
-    );
+    const res = await API.post("/upload", formData);
 
     socket.emit("privateMessage", {
       sender: currentUser._id,
       receiver: selectedUser._id,
-      file: res.data.url,
+      text: "",
+      file: res.data.url,       // 🔥 CLOUDINARY URL
       fileType: res.data.fileType,
     });
-
-    // reset preview
-    setPreviewFile(null);
-    setPreviewUrl(null);
   } catch (err) {
-    console.error("File upload error", err);
+    console.log("Upload error", err);
   }
 };
 
