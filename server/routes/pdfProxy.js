@@ -1,5 +1,4 @@
 const express = require("express");
-const axios = require("axios");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
@@ -7,16 +6,21 @@ router.get("/", async (req, res) => {
     const { url } = req.query;
     if (!url) return res.status(400).send("URL required");
 
-    const response = await axios.get(url, {
-      responseType: "arraybuffer",
-    });
+    // 🔥 Native fetch (Node 18+)
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      console.error("Cloudinary response:", response.status);
+      return res.status(500).send("PDF load failed");
+    }
 
     res.setHeader("Content-Type", "application/pdf");
     res.setHeader("Content-Disposition", "inline");
 
-    res.send(response.data);
+    // stream directly to browser
+    response.body.pipe(res);
   } catch (err) {
-    console.error("PDF proxy error:", err.message);
+    console.error("PDF proxy error:", err);
     res.status(500).send("PDF load failed");
   }
 });
