@@ -12,15 +12,12 @@ router.post("/", upload.single("file"), async (req, res) => {
       return res.status(400).json({ message: "No file received" });
     }
 
-    // 🔥 IMPORTANT FIX: decide resource_type manually
-    const isPdf =
-      req.file.mimetype === "application/pdf";
-
-    const resourceType = isPdf ? "raw" : "auto";
+    const isPdf = req.file.mimetype === "application/pdf";
 
     cloudinary.uploader.upload_stream(
       {
-        resource_type: resourceType,
+        resource_type: isPdf ? "raw" : "auto",
+        format: isPdf ? "pdf" : undefined, // 🔥 THIS IS THE KEY FIX
       },
       (error, result) => {
         if (error) {
@@ -29,8 +26,8 @@ router.post("/", upload.single("file"), async (req, res) => {
         }
 
         res.json({
-          url: result.secure_url,
-          fileType: result.resource_type, // raw | image | video
+          url: result.secure_url,     // 🔥 ab .pdf ke sath aayega
+          fileType: result.resource_type,
         });
       }
     ).end(req.file.buffer);
