@@ -698,14 +698,15 @@ const stopRecording = () => {
   m.fileType !== "image" &&
   m.fileType !== "video" &&
   m.fileType !== "audio" && (
-    <a
-      href={m.file}
-      target="_blank"
-      rel="noreferrer"
-      className="chat-doc"
-    >
-      📄 Download file
-    </a>
+   <a
+  href={m.file.replace("/upload/", "/upload/fl_inline/")}
+  target="_blank"
+  rel="noreferrer"
+  className="chat-doc"
+>
+  📄 Open PDF
+</a>
+
 )}
 
 
