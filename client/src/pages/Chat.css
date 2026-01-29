@@ -1151,11 +1151,11 @@
 
 
 .bubble.me .chat-image {
-  max-width: 150px !important;
+  max-width: 100px !important;
 }
 
 .bubble:not(.me) .chat-image {
-  max-width: 265px !important;
+  max-width: 200px !important;
 }
 
 /* ===== FULL SCREEN IMAGE VIEWER ===== */
