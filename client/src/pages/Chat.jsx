@@ -383,6 +383,8 @@ const sendFileToServer = async (file) => {
     formData.append("file", file);
 
     const res = await API.post("/upload", formData);
+    console.log("UPLOAD RESPONSE 👉", res.data);
+
 
     socket.emit("privateMessage", {
       sender: currentUser._id,
