@@ -24,6 +24,8 @@ app.use("/api/users", require("./routes/userRoutes"));
 app.use("/api/messages", require("./routes/messageRoutes"));
 app.use("/api/follow", require("./routes/followRoutes"));
 app.use("/api/upload", uploadRoutes);
+app.use("/api/pdf", require("./routes/pdfProxy"));
+
 
 
 const server = http.createServer(app);
